@@ -1,7 +1,8 @@
+# V08 -WIP01
+
 # wip to do notes
 # Undo y ReDo
 # disclaimer
-# ajustar comandos con shift, ctrl y alt
 
 import c4d
 from c4d import gui
@@ -79,43 +80,50 @@ def sel_msgs(sel_objs, sel_mats, sel_tags):
         gui.MessageDialog('Warning: ' + 'You have a ' + sel_ID[0] + ' and a ' + sel_ID[1] + 'selected.')
 
 def main():
-    # get active selection 
-    sel_objs = get_active_objs()
-    sel_mats = get_active_mats()
-    sel_tags = get_active_tags()
-
-    sel_msgs(sel_objs, sel_mats, sel_tags)
-
-    if not sel_objs and not sel_mats and not sel_tags: # return if both selection list are None
-        no_sel_dlg() ; return
-
     # key input event
     bc = c4d.BaseContainer()
     if c4d.gui.GetInputState(c4d.BFM_INPUT_KEYBOARD,c4d.BFM_INPUT_CHANNEL,bc):
         if  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QSHIFT:
             print "shift input"
-            sel_name_new = ""
-
+            key = 1
         elif  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QALT: 
             print "alt input"
-            sel_name_new = "_"
-
+            key = 2
         elif  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QCTRL: 
             print "ctrl input"
-            sel_name_new = "-"
-
+            key = 3
         else:
-            # Open the options dialog to let users choose their options.
-            dlg = OptionsDialog() ; dlg.Open(c4d.DLG_TYPE_MODAL, defaultw=300, defaulth=50)
-            if not dlg.ok:
-                return
-            sel_name_new = dlg.findGName # new selection nanme
+            key = 0
 
-            # automatically add a separator in the name
-            last_character = ["_", "-", " ", "*", ".", "+", "/" ]
-            if sel_name_new:
-                if not sel_name_new[-1] in last_character:
-                    sel_name_new = sel_name_new + "_"
+    # get active selection 
+    sel_objs = get_active_objs()
+    sel_mats = get_active_mats()
+    sel_tags = get_active_tags()
+    # execute different messages based on selected items
+    sel_msgs(sel_objs, sel_mats, sel_tags)
+    
+    if not sel_objs and not sel_mats and not sel_tags: # return if both selection list are None
+        no_sel_dlg() ; return
+
+    # main name definitionns
+    if  key == 1:
+        sel_name_new = ""
+    elif  key == 2:
+        sel_name_new = "_"
+    elif  key == 3:
+        sel_name_new = "-"
+    else:
+        # Open the options dialog to let users choose their options.
+        dlg = OptionsDialog() ; dlg.Open(c4d.DLG_TYPE_MODAL, defaultw=300, defaulth=50)
+        if not dlg.ok:
+            return
+        sel_name_new = dlg.findGName # new selection nanme
+
+        # automatically add a separator in the name
+        last_character = ["_", "-", " ", "*", ".", "+", "/" ]
+        if sel_name_new:
+            if not sel_name_new[-1] in last_character:
+                sel_name_new = sel_name_new + "_"
 
     # set names to active selection
     if sel_objs:
@@ -127,8 +135,8 @@ def main():
 
     # update the scene
     c4d.EventAdd()
-
-    gui.MessageDialog('Rename finished.')
+    if key == 0:
+        gui.MessageDialog('Rename finished.')
     
 if __name__=='__main__':
     main()
