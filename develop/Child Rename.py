@@ -12,7 +12,7 @@ class OptionsDialog(gui.GeDialog): # name dialog class
 
         self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name='Set the new selection name:') 
         self.AddEditText(self.IDC_EDITNAME, c4d.BFH_SCALEFIT)
-        self.SetString(self.IDC_EDITNAME, 'Write you selection new name')
+        self.SetString(self.IDC_EDITNAME, 'Write here')
 
         # Ok/Cancel buttons
         self.AddDlgGroup(c4d.DLG_OK|c4d.DLG_CANCEL)
@@ -33,31 +33,34 @@ class OptionsDialog(gui.GeDialog): # name dialog class
         return True
 
 def no_sel_dlg(): # no selection dialog
-    gui.MessageDialog('Please select one or more objects / materials.') ; return 
+    gui.MessageDialog('Please select one or more objects / materials / tags.') ; return 
 
 def get_active_objs(): # get active objects from obj manager
     activeObjects = doc.GetActiveObjects(c4d.GETACTIVEOBJECTFLAGS_CHILDREN)
     if not activeObjects:
         no_sel_dlg() ; return None
-
     return activeObjects
 
 def get_active_mats(): # get active materials from material manager
     activeMaterials = doc.GetActiveMaterials()
     if not activeMaterials:
         no_sel_dlg() ; return None
-
     return activeMaterials
+
+def get_active_tags(): # get active tags from material manager
+    activeTags = doc.GetActiveTags()
+        if not activeMaterials:
+            no_sel_dlg() ; return None
+    return activeTags
 
 def main():
     # get active selection 
     sel_objs = get_active_objs()
+    sel_mats = get_active_mats()
+    sel_tags = get_active_tags()
 
-    if sel_objs == None:
-        sel_objs = get_active_mats()
-
-        if sel_objs == None:
-            no_sel_dlg() ; return
+    if not sel_objs and not sel_mats and not sel_tags: # return if both selection list are None
+        no_sel_dlg() ; return
 
     # key input event
     bc = c4d.BaseContainer()
@@ -87,17 +90,18 @@ def main():
             if not sel_name_new[-1] in last_character:
                 sel_name_new = sel_name_new + "_"
 
-
-    # wip to do:
-    # que reconozca el final del string para a;adir un _ o - o espacio en caso que no haya nada en el string del dialog
-    # sirva tambien para materiales
-    # BaseDocument.GetActiveMaterials
-
     i = 0 # iterator number
 
-    for obj in sel_objs:
-        i += 1 # iterator re asignment
-        obj[c4d.ID_BASELIST_NAME] = sel_name_new + "0" + str(i) # asign new name
+    # set names to selected objects
+    if sel_objs:
+        for obj in sel_objs:
+            i += 1 # iterator re asignment
+            obj[c4d.ID_BASELIST_NAME] = sel_name_new + "0" + str(i) # asign new name
+
+    if sel_mats:
+        for obj in sel_objs:
+            i += 1 # iterator re asignment
+            obj[c4d.ID_BASELIST_NAME] = sel_name_new + "0" + str(i) # asign new name
 
     # update the scene
     c4d.EventAdd()
