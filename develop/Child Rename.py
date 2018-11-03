@@ -33,33 +33,29 @@ class OptionsDialog(gui.GeDialog): # name dialog class
         return True
 
 def no_sel_dlg(): # no selection dialog
-    gui.MessageDialog('Please select one or more objects / materials / tags.') ; return 
+    gui.MessageDialog('Please select one or more objects / materials.') ; return
 
 def get_active_objs(): # get active objects from obj manager
     activeObjects = doc.GetActiveObjects(c4d.GETACTIVEOBJECTFLAGS_CHILDREN)
     if not activeObjects:
-        no_sel_dlg() ; return None
+        return None
     return activeObjects
 
 def get_active_mats(): # get active materials from material manager
     activeMaterials = doc.GetActiveMaterials()
     if not activeMaterials:
-        no_sel_dlg() ; return None
+        return None
     return activeMaterials
-
-def get_active_tags(): # get active tags from material manager
-    activeTags = doc.GetActiveTags()
-        if not activeMaterials:
-            no_sel_dlg() ; return None
-    return activeTags
 
 def main():
     # get active selection 
     sel_objs = get_active_objs()
     sel_mats = get_active_mats()
-    sel_tags = get_active_tags()
 
-    if not sel_objs and not sel_mats and not sel_tags: # return if both selection list are None
+    if sel_objs and sel_mats:
+        gui.MessageDialog('You have objects and material selected.')
+
+    if not sel_objs and not sel_mats: # return if both selection list are None
         no_sel_dlg() ; return
 
     # key input event
@@ -98,8 +94,10 @@ def main():
             i += 1 # iterator re asignment
             obj[c4d.ID_BASELIST_NAME] = sel_name_new + "0" + str(i) # asign new name
 
+    i = 0 # iterator number
+
     if sel_mats:
-        for obj in sel_objs:
+        for obj in sel_mats:
             i += 1 # iterator re asignment
             obj[c4d.ID_BASELIST_NAME] = sel_name_new + "0" + str(i) # asign new name
 
@@ -108,3 +106,9 @@ def main():
     
 if __name__=='__main__':
     main()
+
+
+# wip notes
+
+# notificacion cuando lo haga
+# notificacion dependiendo del nombre que cambie
