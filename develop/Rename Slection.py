@@ -1,21 +1,39 @@
-# V08 -WIP01
+# V09 -WIP01
 
-# wip to do notes
-# Undo y ReDo
-# disclaimer
+'''
+
+wip to do notes
+Undo y ReDo
+disclaimer
+
+'''
 
 import c4d
 from c4d import gui
 
+#main dialog
 class OptionsDialog(gui.GeDialog): # name dialog class
     IDC_LABELNAME = 1000
-    IDC_EDITNAME = 1001
+    IDC_EDITNAME  = 1001
+    IDC_BOOL_01   = 1002
+    IDC_BOOL_02   = 1003
+    IDC_BOOL_03   = 1004
 
     def CreateLayout(self):
         self.SetTitle('Rename Selection')
-        self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name='Set the new selection name:') 
+        self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name ='Set the new selection name:')
         self.AddEditText(self.IDC_EDITNAME, c4d.BFH_SCALEFIT)
+        # ---- separator ----
+        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
+        # ---- separator ---- Bool options
+        self.AddCheckbox(self.IDC_BOOL_01, c4d.BFH_SCALEFIT, 5, 5, name = 'Objects')
+        self.AddCheckbox(self.IDC_BOOL_02, c4d.BFH_SCALEFIT, 5, 5, name = 'Materials')
+        self.AddCheckbox(self.IDC_BOOL_03, c4d.BFH_SCALEFIT, 5, 5, name = 'Tags')
+        # ---- separator ----
+        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
+        # set dialog default values
         self.SetString(self.IDC_EDITNAME, 'Write here')
+        self.SetBool(self.IDC_BOOL_01, True)
         # Ok/Cancel buttons
         self.AddDlgGroup(c4d.DLG_OK|c4d.DLG_CANCEL)
         self.ok = False
@@ -86,22 +104,22 @@ def main():
         if  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QSHIFT:
             print "shift input"
             key = 1
-        elif  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QALT: 
+        elif  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QALT:
             print "alt input"
             key = 2
-        elif  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QCTRL: 
+        elif  bc[c4d.BFM_INPUT_QUALIFIER] & c4d.QCTRL:
             print "ctrl input"
             key = 3
         else:
             key = 0
 
-    # get active selection 
+    # get active selection
     sel_objs = get_active_objs()
     sel_mats = get_active_mats()
     sel_tags = get_active_tags()
     # execute different messages based on selected items
     sel_msgs(sel_objs, sel_mats, sel_tags)
-    
+
     if not sel_objs and not sel_mats and not sel_tags: # return if both selection list are None
         no_sel_dlg() ; return
 
@@ -114,7 +132,7 @@ def main():
         sel_name_new = "-"
     else:
         # Open the options dialog to let users choose their options.
-        dlg = OptionsDialog() ; dlg.Open(c4d.DLG_TYPE_MODAL, defaultw=300, defaulth=50)
+        dlg = OptionsDialog() ; dlg.Open(c4d.DLG_TYPE_MODAL, defaultw=100, defaulth=50)
         if not dlg.ok:
             return
         sel_name_new = dlg.findGName # new selection nanme
@@ -137,11 +155,12 @@ def main():
     c4d.EventAdd()
     if key == 0:
         gui.MessageDialog('Rename finished.')
-    
+
 if __name__=='__main__':
     main()
 
 
+# UnDo ReDo templates
 """""
 #start undo action
 doc.StartUndo()
