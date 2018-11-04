@@ -2,35 +2,95 @@
 
 '''
 
-wip to do notes
+Dialog 2.0
 Undo y ReDo
 disclaimer
+Soporte para hijos de objs seleccionados?
 
 '''
 
 import c4d
 from c4d import gui
 
-#main dialog
+# main dialog
 class OptionsDialog(gui.GeDialog): # name dialog class
+    # dialog IDS
     IDC_LABELNAME = 1000
     IDC_EDITNAME  = 1001
-    IDC_BOOL_01   = 1002
-    IDC_BOOL_02   = 1003
-    IDC_BOOL_03   = 1004
+    IDC_BOOL_01   = 1010
+    IDC_BOOL_02   = 1011
+    IDC_BOOL_03   = 1012
+    IDC_BOOL_04   = 1013
+    IDC_STR_01    = 1020
+    IDC_STR_02    = 1021
+    IDC_LBL_01    = 1030
+    IDC_LBL_02    = 1031
+    IDC_LBL_03    = 1032
+    IDC_LBL_04    = 1033
+    IDC_NUM_01    = 1040
+
+
+    LBL_INFO1 = 1001
+
+    GROUP_TEXT = 10000
+    GROUP_NUMBERING = 20000
+    GROUP_PREFIX = 30000
+    GROUP_REPLACE = 40000
+    GROUP_MATCHCASE = 45000
+    PREFIX = 25002
+    SUFFIX = 25004
+    REPLACE = 25003
+    WITH = 25005
+    MATCH_CASE = 25007
+    NEWNAME= 10001
+    CHK_APPEND_TO_EXISTING = 10003
+    CHK_BEFORE_EXISTING = 10004
+    START_NUMBER = 10005
+    LEADING_ZERO = 10006
+    LEADING_ZERO_1 = 100
+    LEADING_ZERO_01 = 101
+    LEADING_ZERO_001 = 102
+    LEADING_ZERO_0001 = 103
+    GROUP_OPTIONS = 50000
+    BTN_OK = 50001
+    BTN_CANCEL = 50002
 
     def CreateLayout(self):
         self.SetTitle('Rename Selection')
         self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name ='Set the new selection name:')
         self.AddEditText(self.IDC_EDITNAME, c4d.BFH_SCALEFIT)
+
         # ---- separator ----
         self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
+
         # ---- separator ---- Bool options
-        self.AddCheckbox(self.IDC_BOOL_01, c4d.BFH_SCALEFIT, 5, 5, name = 'Objects')
-        self.AddCheckbox(self.IDC_BOOL_02, c4d.BFH_SCALEFIT, 5, 5, name = 'Materials')
-        self.AddCheckbox(self.IDC_BOOL_03, c4d.BFH_SCALEFIT, 5, 5, name = 'Tags')
-        # ---- separator ----
+        #self.AddStaticText(self.IDC_LBL_04, c4d.BFH_LEFT, name = 'Change the name on this selected objects:')
+        self.AddCheckbox(self.IDC_BOOL_01, c4d.BFH_SCALEFIT, 5, 5, name = 'Objects.')
+        self.AddCheckbox(self.IDC_BOOL_02, c4d.BFH_SCALEFIT, 5, 5, name = 'Materials.')
+        self.AddCheckbox(self.IDC_BOOL_03, c4d.BFH_SCALEFIT, 5, 5, name = 'Tags.')
+
+        # ---- separator ---- String options
         self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
+        self.AddStaticText(self.IDC_LBL_01, c4d.BFH_LEFT, name = 'Preffix:')
+        self.AddEditText(self.IDC_STR_01, c4d.BFH_SCALEFIT)
+        self.AddStaticText(self.IDC_LBL_02, c4d.BFH_LEFT, name = 'Suffix:')
+        self.AddEditText(self.IDC_STR_02, c4d.BFH_SCALEFIT)
+
+        # ---- separator ---- Extra options
+        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
+        self.AddStaticText(self.IDC_LBL_03, c4d.BFH_LEFT, name = 'First Number:')
+        self.AddEditNumber(self.IDC_NUM_01, c4d.BFH_SCALEFIT, initw=80, inith=0)
+        self.AddCheckbox(self.IDC_BOOL_04, c4d.BFH_SCALEFIT, 5, 5, name = 'Reverse selection order.')
+
+        # PREFIX / SUFFIX
+        self.GroupBegin(self.GROUP_PREFIX, c4d.BFH_SCALEFIT, 4, 1, inith=0)
+        self.GroupBorderSpace(10, 0, 10, 0)
+        self.AddStaticText(self.LBL_INFO1, c4d.BFH_LEFT, name='Prefix: . . . .')
+        self.AddEditText(self.PREFIX, c4d.BFH_SCALEFIT, initw=85)
+        self.AddStaticText(self.LBL_INFO1, c4d.BFH_LEFT, name='Suffix:')
+        self.AddEditText(self.SUFFIX, c4d.BFH_SCALEFIT, initw=85)
+        self.GroupEnd()
+
         # set dialog default values
         self.SetString(self.IDC_EDITNAME, 'Write here')
         self.SetBool(self.IDC_BOOL_01, True)
@@ -95,6 +155,7 @@ def sel_msgs(sel_objs, sel_mats, sel_tags):
     if not sel_ID:
         return
     else:
+        # warning gui msg dialog
         gui.MessageDialog('Warning: ' + 'You have a ' + sel_ID[0] + ' and a ' + sel_ID[1] + 'selected.')
 
 def main():
