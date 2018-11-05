@@ -1,51 +1,64 @@
-# V09 -WIP04
+# V09 -WIP05
 
 '''
+
+Main:
 
 Dialog 2.0
 Undo y ReDo
 disclaimer
 arreglar el largo del texto extra.
+
 Extra Tab:
 Custom space - / _
 Replace string with other string?
 Soporte para hijos de objs seleccionados? / toda la jerarquia?
 Solo evitar repeticiones de nombres.
 
+Path renamer tab:
+
+Rename path for VDB volumes, ABC files, .ass files and RS proxies files.
 
 '''
 
 import c4d
 from c4d import gui
 
+# main objs IDS
+
+# ABC files
+# VDB files
+# Ass files
+# RSprx files
+
 # main dialog
 class OptionsDialog(gui.GeDialog): # name dialog class
     # dialog IDS
-    IDC_LABELNAME = 1000
-    IDC_EDITNAME  = 1001
-    IDC_BOOL_01   = 1010
-    IDC_BOOL_02   = 1011
-    IDC_BOOL_03   = 1012
-    IDC_BOOL_04   = 1013
-    IDC_STR_01    = 1020
-    IDC_STR_02    = 1021
-    IDC_LBL_01    = 1030
-    IDC_LBL_02    = 1031
-    IDC_LBL_03    = 1032
-    IDC_LBL_04    = 1033
-    IDC_NUM_01    = 1040
-    IDC_GRP_01    = 1050
-    IDC_GRP_02    = 1051
-    IDC_GRP_03    = 1052
-    IDC_GRP_04    = 1053
-    IDC_TAB_01    = 2000
-    IDC_TAB_02    = 2001
+    IDC_LABELNAME  = 100000
+    IDC_EDITNAME   = 100001
+    IDC_BOOL_01    = 100010
+    IDC_BOOL_02    = 100011
+    IDC_BOOL_03    = 100012
+    IDC_BOOL_04    = 100013
+    IDC_STR_01     = 100020
+    IDC_STR_02     = 100021
+    IDC_LBL_01     = 100030
+    IDC_LBL_02     = 100031
+    IDC_LBL_03     = 100032
+    IDC_LBL_04     = 100033
+    IDC_NUM_01     = 100040
+    IDC_GRP_01     = 100050
+    IDC_GRP_02     = 100051
+    IDC_GRP_03     = 100052
+    IDC_GRP_04     = 100053
+    IDC_TAB_01     = 200000
+    IDC_TAB_02     = 200001
+    IDC_TAB_03     = 200003
+    IDC_TAB_04     = 200004
 
     def CreateLayout(self):
-        self.SetTitle('Rename Selection')
+        '''self.SetTitle('Rename Selection')
 
-        #self.TabGroupBegin(self.IDC_TAB_01, c4d.BFH_SCALEFIT, tabtype=c4d.TAB_TABS)
-        #self.GroupBegin(self.IDC_GRP_04, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
         # ---- separator ---- Main Rename options
         self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name ='Set the new selection name:')
         self.AddEditText(self.IDC_EDITNAME, c4d.BFH_SCALEFIT)
@@ -83,6 +96,57 @@ class OptionsDialog(gui.GeDialog): # name dialog class
         self.AddEditNumber(self.IDC_NUM_01, c4d.BFH_SCALEFIT, initw=80, inith=0)
         self.GroupEnd()
         self.AddCheckbox(self.IDC_BOOL_04, c4d.BFH_SCALEFIT, 5, 5, name = 'Reverse selection order.')
+
+        # set dialog default values
+        self.SetString(self.IDC_EDITNAME, 'Write here')
+        self.SetBool(self.IDC_BOOL_01, True)'''
+
+        # dialog 2.0 design
+        self.SetTitle('Rename Selection')
+
+        # main tab group
+        self.TabGroupBegin(self.IDC_TAB_01, c4d.BFH_SCALEFIT, tabtype = c4d.TAB_TABS)
+
+        # ---- Tab 01 ---- Main renamer
+        self.GroupBegin(self.IDC_TAB_02, c4d.BFH_SCALEFIT, 1, title = 'Rename selection')
+        self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name ='Set the new selection name:')
+        self.AddEditText(self.IDC_EDITNAME, c4d.BFH_SCALEFIT)
+        # -- rename options group --
+        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
+        self.AddStaticText(self.IDC_LBL_01, c4d.BFH_LEFT, name = 'Change the name on this selected objects:')
+
+        self.GroupBegin(self.IDC_GRP_01, c4d.BFH_SCALEFIT, 3, 1, inith = 0)
+        self.GroupBorderSpace(10, 4, 10, 4)
+        self.AddCheckbox(self.IDC_BOOL_01, c4d.BFH_SCALEFIT, 5, 5, name = 'Objects.')
+        self.AddCheckbox(self.IDC_BOOL_02, c4d.BFH_SCALEFIT, 5, 5, name = 'Materials.')
+        self.AddCheckbox(self.IDC_BOOL_03, c4d.BFH_SCALEFIT, 5, 5, name = 'Tags.')
+        self.GroupEnd()
+        # -- rename options group end --
+        # -- Preffix and Suffix options group --
+        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
+        self.GroupBegin(self.IDC_GRP_02, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
+        self.GroupBorderSpace(10, 4, 10, 4)
+        self.AddStaticText(self.IDC_LBL_02, c4d.BFH_LEFT, name = 'Preffix:')
+        self.AddEditText(self.IDC_STR_01, c4d.BFH_SCALEFIT)
+        self.AddStaticText(self.IDC_LBL_03, c4d.BFH_LEFT, name = 'Suffix:')
+        self.AddEditText(self.IDC_STR_02, c4d.BFH_SCALEFIT)
+        self.GroupEnd()
+        # -- Preffix and Suffix options group end--
+        self.GroupEnd()
+
+        # ---- Tab 02 ---- Main renamer
+        self.GroupBegin(self.IDC_TAB_03, c4d.BFH_SCALEFIT, 1, title = 'Paths renamer')
+        self.GroupEnd()
+
+        # ---- Tab 03 ---- Extra options
+        self.GroupBegin(self.IDC_TAB_04, c4d.BFH_SCALEFIT, 1, title = 'Extra options')
+        self.AddStaticText(self.IDC_LBL_04, c4d.BFH_LEFT, name = 'First Number:')
+        self.AddEditNumber(self.IDC_NUM_01, c4d.BFH_LEFT, initw = 120, inith = 0)
+        self.AddCheckbox(self.IDC_BOOL_04, c4d.BFH_SCALEFIT, 5, 5, name = 'Reverse selection order.')
+        self.GroupEnd()
+
+        # close mai ntab group
+        self.GroupEnd()
 
         # set dialog default values
         self.SetString(self.IDC_EDITNAME, 'Write here')
@@ -186,7 +250,7 @@ def main():
         sel_name_new = "-"
     else:
         # Open the options dialog to let users choose their options.
-        dlg = OptionsDialog() ; dlg.Open(c4d.DLG_TYPE_MODAL, defaultw=100, defaulth=50)
+        dlg = OptionsDialog() ; dlg.Open(c4d.DLG_TYPE_MODAL, defaultw = 300, defaulth = 50)
         if not dlg.ok:
             return
         sel_name_new = dlg.findGName # new selection nanme
