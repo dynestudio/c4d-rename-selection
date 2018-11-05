@@ -1,12 +1,17 @@
-# V09 -WIP03
+# V09 -WIP04
 
 '''
 
 Dialog 2.0
 Undo y ReDo
 disclaimer
-Soporte para hijos de objs seleccionados?
 arreglar el largo del texto extra.
+Extra Tab:
+Custom space - / _
+Replace string with other string?
+Soporte para hijos de objs seleccionados? / toda la jerarquia?
+Solo evitar repeticiones de nombres.
+
 
 '''
 
@@ -32,16 +37,26 @@ class OptionsDialog(gui.GeDialog): # name dialog class
     IDC_GRP_01    = 1050
     IDC_GRP_02    = 1051
     IDC_GRP_03    = 1052
+    IDC_GRP_04    = 1053
+    IDC_TAB_01    = 2000
+    IDC_TAB_02    = 2001
 
     def CreateLayout(self):
         self.SetTitle('Rename Selection')
+
+        #self.TabGroupBegin(self.IDC_TAB_01, c4d.BFH_SCALEFIT, tabtype=c4d.TAB_TABS)
+        #self.GroupBegin(self.IDC_GRP_04, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
+        # ---- separator ---- Main Rename options
         self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name ='Set the new selection name:')
         self.AddEditText(self.IDC_EDITNAME, c4d.BFH_SCALEFIT)
+        #self.GroupEnd()
+
+        self.GroupEnd()
 
         # ---- separator ----
         self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
 
-        # ---- separator ---- Bool options
+        # ---- separator ---- Type selection options
         self.AddStaticText(self.IDC_LBL_04, c4d.BFH_LEFT, name = 'Change the name on this selected objects:')
         self.GroupBegin(self.IDC_GRP_01, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
         self.GroupBorderSpace(10, 4, 10, 4)
@@ -50,7 +65,7 @@ class OptionsDialog(gui.GeDialog): # name dialog class
         self.AddCheckbox(self.IDC_BOOL_03, c4d.BFH_SCALEFIT, 5, 5, name = 'Tags.')
         self.GroupEnd()
 
-        # ---- separator ---- String options
+        # ---- separator ---- Preffix and Suffix options
         self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
         self.GroupBegin(self.IDC_GRP_02, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
         self.GroupBorderSpace(10, 4, 10, 4)
@@ -62,7 +77,6 @@ class OptionsDialog(gui.GeDialog): # name dialog class
 
         # ---- separator ---- Extra options
         self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
-
         self.GroupBegin(self.IDC_GRP_03, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
         self.GroupBorderSpace(10, 4, 10, 4)
         self.AddStaticText(self.IDC_LBL_03, c4d.BFH_LEFT, name = 'First Number:')
@@ -73,13 +87,13 @@ class OptionsDialog(gui.GeDialog): # name dialog class
         # set dialog default values
         self.SetString(self.IDC_EDITNAME, 'Write here')
         self.SetBool(self.IDC_BOOL_01, True)
+
         # Ok/Cancel buttons
         self.AddDlgGroup(c4d.DLG_OK|c4d.DLG_CANCEL)
         self.ok = False
         return True
 
     def Command(self, id, msg):
-
         if id == c4d.IDC_OK:
             self.ok = True
             self.findGName = self.GetString(self.IDC_EDITNAME)
@@ -198,7 +212,6 @@ def main():
 
 if __name__=='__main__':
     main()
-
 
 # UnDo ReDo templates
 """""
