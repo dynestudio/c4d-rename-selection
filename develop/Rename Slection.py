@@ -1,4 +1,4 @@
-# V09 -WIP05
+# V0.9.2 - WIP 06
 
 import c4d
 from c4d import gui
@@ -95,6 +95,9 @@ class OptionsDialog(gui.GeDialog): # name dialog class
         if id == c4d.IDC_OK:
             self.ok = True
             self.findGName = self.GetString(self.IDC_EDITNAME)
+            self.find_Main_Obj = self.GetBool(self.IDC_BOOL_01)
+            self.find_Main_Mat = self.GetBool(self.IDC_BOOL_02)
+            self.find_Main_Tag = self.GetBool(self.IDC_BOOL_03)
             self.Close()
 
         elif id == c4d.IDC_CANCEL:
@@ -170,7 +173,7 @@ def main():
     sel_mats = get_active_mats()
     sel_tags = get_active_tags()
     # execute different messages based on selected items
-    sel_msgs(sel_objs, sel_mats, sel_tags)
+    # sel_msgs(sel_objs, sel_mats, sel_tags)
 
     if not sel_objs and not sel_mats and not sel_tags: # return if both selection list are None
         no_sel_dlg() ; return
@@ -187,7 +190,10 @@ def main():
         dlg = OptionsDialog() ; dlg.Open(c4d.DLG_TYPE_MODAL, defaultw = 300, defaulth = 50)
         if not dlg.ok:
             return
-        sel_name_new = dlg.findGName # new selection nanme
+        sel_name_new = dlg.findGName      # new selection nanme
+        sel_main_obj = dlg.find_Main_Obj  # get main obj selection to rename
+        sel_main_mat = dlg.find_Main_Mat  # get main mat selection to rename
+        sel_main_tag = dlg.find_Main_Tag  # get main tag selection to rename
 
         # automatically add a separator in the name
         last_character = ["_", "-", " ", "*", ".", "+", "/" ]
@@ -196,11 +202,11 @@ def main():
                 sel_name_new = sel_name_new + "_"
 
     # set names to active selection
-    if sel_objs:
+    if sel_main_obj:
         apply_Renames(sel_objs, sel_name_new)
-    if sel_mats:
+    if sel_main_mat:
         apply_Renames(sel_mats, sel_name_new)
-    if sel_tags:
+    if sel_main_tag:
         apply_Renames(sel_tags, sel_name_new)
 
     # update the scene
