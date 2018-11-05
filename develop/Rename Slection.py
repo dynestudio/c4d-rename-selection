@@ -1,26 +1,5 @@
 # V09 -WIP05
 
-'''
-
-Main:
-
-Dialog 2.0
-Undo y ReDo
-disclaimer
-arreglar el largo del texto extra.
-
-Extra Tab:
-Custom space - / _
-Replace string with other string?
-Soporte para hijos de objs seleccionados? / toda la jerarquia?
-Solo evitar repeticiones de nombres.
-
-Path renamer tab:
-
-Rename path for VDB volumes, ABC files, .ass files and RS proxies files.
-
-'''
-
 import c4d
 from c4d import gui
 
@@ -57,51 +36,7 @@ class OptionsDialog(gui.GeDialog): # name dialog class
     IDC_TAB_04     = 200004
 
     def CreateLayout(self):
-        '''self.SetTitle('Rename Selection')
-
-        # ---- separator ---- Main Rename options
-        self.AddStaticText(self.IDC_LABELNAME, c4d.BFH_LEFT, name ='Set the new selection name:')
-        self.AddEditText(self.IDC_EDITNAME, c4d.BFH_SCALEFIT)
-        #self.GroupEnd()
-
-        self.GroupEnd()
-
-        # ---- separator ----
-        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
-
-        # ---- separator ---- Type selection options
-        self.AddStaticText(self.IDC_LBL_04, c4d.BFH_LEFT, name = 'Change the name on this selected objects:')
-        self.GroupBegin(self.IDC_GRP_01, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
-        self.GroupBorderSpace(10, 4, 10, 4)
-        self.AddCheckbox(self.IDC_BOOL_01, c4d.BFH_SCALEFIT, 5, 5, name = 'Objects.')
-        self.AddCheckbox(self.IDC_BOOL_02, c4d.BFH_SCALEFIT, 5, 5, name = 'Materials.')
-        self.AddCheckbox(self.IDC_BOOL_03, c4d.BFH_SCALEFIT, 5, 5, name = 'Tags.')
-        self.GroupEnd()
-
-        # ---- separator ---- Preffix and Suffix options
-        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
-        self.GroupBegin(self.IDC_GRP_02, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
-        self.GroupBorderSpace(10, 4, 10, 4)
-        self.AddStaticText(self.IDC_LBL_01, c4d.BFH_LEFT, name = 'Preffix:')
-        self.AddEditText(self.IDC_STR_01, c4d.BFH_SCALEFIT)
-        self.AddStaticText(self.IDC_LBL_02, c4d.BFH_LEFT, name = 'Suffix:')
-        self.AddEditText(self.IDC_STR_02, c4d.BFH_SCALEFIT)
-        self.GroupEnd()
-
-        # ---- separator ---- Extra options
-        self.AddSeparatorH(20, c4d.BFH_SCALEFIT)
-        self.GroupBegin(self.IDC_GRP_03, c4d.BFH_SCALEFIT, 4, 1, inith = 0)
-        self.GroupBorderSpace(10, 4, 10, 4)
-        self.AddStaticText(self.IDC_LBL_03, c4d.BFH_LEFT, name = 'First Number:')
-        self.AddEditNumber(self.IDC_NUM_01, c4d.BFH_SCALEFIT, initw=80, inith=0)
-        self.GroupEnd()
-        self.AddCheckbox(self.IDC_BOOL_04, c4d.BFH_SCALEFIT, 5, 5, name = 'Reverse selection order.')
-
-        # set dialog default values
-        self.SetString(self.IDC_EDITNAME, 'Write here')
-        self.SetBool(self.IDC_BOOL_01, True)'''
-
-        # dialog 2.0 design
+        # main window title
         self.SetTitle('Rename Selection')
 
         # main tab group
