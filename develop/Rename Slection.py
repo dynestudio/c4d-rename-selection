@@ -4,7 +4,6 @@ import c4d
 from c4d import gui
 
 # main objs IDS
-
 # ABC files
 # VDB files
 # Ass files
