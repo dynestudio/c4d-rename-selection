@@ -2,6 +2,10 @@ import c4d
 
 def culo():
 
-  print 'marico el que lo lea'
+    a = 'marico'
+
+    b = 'el que lo lea'
+
+    print a + ' ' + b
 
 culo()
